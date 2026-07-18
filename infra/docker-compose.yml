@@ -1,0 +1,36 @@
+services:
+  database:
+    build:
+      context: .
+      dockerfile: Dockerfile.database
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "securePassword1!" 
+      MSSQL_PID: "Developer"
+    volumes:
+      - dbData:/var/opt/mssql/data
+    ports:
+      - "1433:1433"
+
+  ollama-hub:
+    build: 
+      context: .
+      dockerfile: Dockerfile.ollama
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./ollama_storage:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped
+
+volumes:
+  dbData:
+  ollama_storage:
+ 

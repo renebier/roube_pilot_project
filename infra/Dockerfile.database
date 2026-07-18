@@ -1,0 +1,19 @@
+FROM mcr.microsoft.com/mssql/server:2022-latest
+
+# Create folders with correct rights
+USER root
+RUN mkdir -p /var/opt/mssql/backup /usr/config /var/opt/mssql/data
+RUN chown -R mssql:mssql /var/opt/mssql/backup /usr/config /var/opt/mssql/data
+
+# Copy files into Container
+COPY bu_erp_data.bak /var/opt/mssql/backup/database.bak
+COPY entrypoint.sh /usr/config/entrypoint.sh
+COPY restore.sql /usr/config/restore.sql
+COPY entrypoint.sh /usr/config/entrypoint.sh
+
+RUN chmod +x /usr/config/entrypoint.sh
+
+# prod rights managment
+USER mssql
+
+ENTRYPOINT ["/bin/bash", "/usr/config/entrypoint.sh"]

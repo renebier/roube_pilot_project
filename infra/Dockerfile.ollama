@@ -1,0 +1,8 @@
+FROM ollama/ollama:latest
+
+COPY Modelfile.analyst /Modelfile
+COPY run_models.sh /run_models.sh
+
+RUN chmod +x /run_models.sh
+
+ENTRYPOINT ["/run_models.sh"]
