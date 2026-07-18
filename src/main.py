@@ -2,6 +2,8 @@ from dotenv import load_dotenv
 from db_connector import DatabaseConnector
 import pandas as pd
 
+from llm_interface import LLMInterface
+
 query = """
 SELECT act.Oid, act.createdOn, act.Subject, act.Duration, proj.Name AS ProjectName, cli.Name AS ClientName, usr.UserName AS UserName, actTy.Name AS ActivityTypeName
 FROM dbo.Activity act 
@@ -21,5 +23,12 @@ if __name__ == "__main__":
         db = DatabaseConnector()
     except Exception as e:
         print(f"Error occurred: {e}")
-    print(pd.DataFrame(db.execute_query(query))
+    res = db.execute_query(query)
+    res["Duration"] = res["Duration"].apply(lambda x: x / 3600 if pd.notnull(x) else 0)
+    rows = res.to_dict(orient="records")
+
+    llmInterface = LLMInterface()
+    for row in rows:
+        print(llmInterface.analyze_row(row))
+
     

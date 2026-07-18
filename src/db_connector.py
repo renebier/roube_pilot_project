@@ -1,6 +1,6 @@
 import os
 import pymssql
-
+import pandas as pd
 class DatabaseConnector(object):
     """
     A class to handle database connections and queries.
@@ -55,7 +55,10 @@ class DatabaseConnector(object):
         if self.connection:
             cursor = self.connection.cursor()
             cursor.execute(query)
-            return cursor.fetchall()
+            columns = [desc[0] for desc in cursor.description]
+            results = cursor.fetchall()
+            df = pd.DataFrame(results, columns=columns)
+            return df
         else:
             print("No active database connection.")
             return None

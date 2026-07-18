@@ -1,43 +1,52 @@
-import os
+from langchain_ollama import ChatOllama
+from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import StrOutputParser
-# Tausche ChatOllama einfach gegen ChatOpenAI oder ChatAnthropic aus, je nachdem was du nutzt
-from langchain_community.chat_models import ChatOllama 
 
-# 1. LLM und Output Parser initialisieren
-llm = ChatOllama(model="llama3", temperature=0.2) # Niedrige Temp für präzise Analyse
-output_parser = StrOutputParser()
 
-# 2. Prompt Template definieren
-# Die Platzhalter im Text müssen EXAKT so heißen wie deine Spaltennamen im DataFrame!
-prompt = ChatPromptTemplate.from_messages([
-    ("system", (
-        "Du bist ein Experte für Lohnbuchhaltung und HR-Compliance. "
-        "Analysiere die folgende Arbeitszeitbuchung auf Auffälligkeiten, Fehler oder Optimierungspotenziale. "
-        "Antworte kurz und knackig in maximal 3 Sätzen."
-    )),
-    ("user", (
-        "Bitte prüfe diese Buchung:\n"
-        "- Mitarbeiter: {Mitarbeiter}\n"
-        "- Datum der Buchung: {Erstellungsdatum}\n"
-        "- Kunde: {Kunde}\n"
-        "- Auftrag/Projekt: {Auftrag}\n"
-        "- Tätigkeit: {Tätigkeit}\n"
-        "- Erfasste Stunden: {Stunden}\n"
-    ))
-])
+class LLMInterface(object):
 
-# 3. Chain zusammenbauen
-chain = prompt | llm | output_parser
+    def __init__(self, model_name: str = "hr-analyst"):
+        """Initialisiert die isolierte LangChain-Pipeline für die Lohnanalyse."""
+        # 1. LLM initialisieren (Ollama muss im Hintergrund laufen)
+        self.llm = ChatOllama(model=model_name, base_url="http://localhost:11434", verbose=True)
 
-# 4. Der Loop über alle Zeilen
-print(f"Starte Analyse von {len(rows)} Buchungen...\n")
+        # 2. JSON Output Parser vorbereiten
+        self.output_parser = JsonOutputParser()
+        # 3. Prompt Template definieren
+        self.prompt = ChatPromptTemplate.from_messages(
+            [
+                (
+                    "user",
+                    (
+                        "Prüfe diese Buchung:\n"
+                        "- Mitarbeiter: {UserName}\n"
+                        "- Datum: {createdOn}\n"
+                        "- Typ der Tätigkeit: {ActivityTypeName}\n"
+                        "- Auftrag: {ProjectName}\n"
+                        "- Tätigkeit: {Subject}\n"
+                        "- Stunden: {Duration}\n"
+                    ),
+                )
+            ]
+        )
 
-for index, row in enumerate(rows):
-    print(f"--- Analyse für Zeile {index + 1} ({row['Mitarbeiter']}) ---")
-    
-    # LangChain matcht die Dict-Keys automatisch mit den {} Platzhaltern im Prompt
-    response = chain.invoke(row)
-    
-    print(response)
-    print("\n" + "="*50 + "\n")
+        # 4. Die ausführbare Chain zusammenbauen
+        self.chain = self.prompt | self.llm | self.output_parser
+
+    def analyze_row(self, row: dict) -> dict:
+        """Analysiert eine einzelne Buchung und gibt ein geparstes JSON-Dict zurück.
+
+        Erwartet ein Dict mit den Keys: Mitarbeiter, Erstellungsdatum, Kunde,
+        Auftrag, Tätigkeit, Stunden
+        """
+        try:
+            # Sicherheits-Cast: Datums-Objekte (z.B. aus Pandas) vorab in String umwandeln
+            if row.get("createdOn"):
+                row["createdOn"] = str(row["createdOn"])
+
+            # KI aufrufen und das fertige JSON-Ergebnis zurückgeben
+            return self.chain.invoke(row)
+
+        except Exception as e:
+            # Fehler abfangen, damit ein externer Loop nicht komplett abstürzt
+            return {"reason": f"Fehler bei der KI-Analyse: {str(e)}", "wrong": None}
