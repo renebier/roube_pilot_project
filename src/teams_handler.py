@@ -18,7 +18,7 @@ class TeamsConnector:
     
     def __exit__(self, exc_type, exc_value, traceback):
         pass
-    
+
     def send_anomaly_alert(self, row: dict, reason: str) -> bool:
         """Format the anomaly alert as an Adaptive Card and send it to MS Teams. Returns True if successful, False otherwise."""
         if not self.webhook_url:
@@ -51,34 +51,51 @@ class TeamsConnector:
                                 "type": "FactSet",
                                 "facts": [
                                     {
-                                        "title": "Mitarbeiter:",
-                                        "value": str(row.get("Mitarbeiter")),
-                                    },
-                                    {
-                                        "title": "Datum:",
+                                        "title": "Mitarbeiter (UserName):",
                                         "value": str(
-                                            row.get("Erstellungsdatum")
+                                            row.get("UserName") or "Unbekannt"
                                         ),
                                     },
                                     {
-                                        "title": "Kunde:",
+                                        "title": "Datum (createdOn):",
                                         "value": str(
-                                            row.get("Kunde") or "Keine Angabe"
+                                            row.get("createdOn") or "Kein Datum"
                                         ),
                                     },
                                     {
-                                        "title": "Auftrag:",
+                                        "title": "Kunde (ClientName):",
                                         "value": str(
-                                            row.get("Auftrag") or "Keine Angabe"
+                                            row.get("ClientName")
+                                            or "Keine Zuweisung"
                                         ),
                                     },
                                     {
-                                        "title": "Tätigkeit:",
-                                        "value": str(row.get("Tätigkeit")),
+                                        "title": "Auftrag (ProjectName):",
+                                        "value": str(
+                                            row.get("ProjectName")
+                                            or "Keine Zuweisung"
+                                        ),
                                     },
                                     {
-                                        "title": "Stunden:",
-                                        "value": f"{row.get('Stunden')} Std.",
+                                        "title": "Tätigkeits-Typ:",
+                                        "value": str(
+                                            row.get("ActivityTypeName")
+                                            or "Kein Typ"
+                                        ),
+                                    },
+                                    {
+                                        "title": "Beschreibung (Subject):",
+                                        "value": str(
+                                            row.get("Subject") or "Kein Text"
+                                        ),
+                                    },
+                                    {
+                                        "title": "Dauer (Duration):",
+                                        "value": f"{row.get('Duration') or 0} Std.",
+                                    },
+                                    {
+                                        "title": "Buchungs-ID (Oid):",
+                                        "value": str(row.get("Oid") or "-"),
                                     },
                                 ],
                             },
