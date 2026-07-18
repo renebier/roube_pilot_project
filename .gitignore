@@ -1,0 +1,5 @@
+.venv
+ollama_storage
+.bak
+__pycache__
+
