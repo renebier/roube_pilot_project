@@ -24,7 +24,7 @@ class LLMInterface(object):
 
     
     def __init__(self, model_name: str = "hr-analyst"):
-        """Initialisiert die isolierte LangChain-Pipeline für die Lohnanalyse."""
+        """Initialise LLM-Pipeline with Ollama"""
         # 1. LLM initialisieren (Ollama muss im Hintergrund laufen)
         self.llm = ChatOllama(model=model_name, base_url="http://localhost:11434", verbose=True)
 
@@ -51,12 +51,14 @@ class LLMInterface(object):
 
         # 4. Die ausführbare Chain zusammenbauen
         self.chain = self.prompt | self.llm | self.output_parser
+    def __enter__(self):
+        return self
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.llm = None
 
     def analyze_row(self, row: dict) -> dict:
-        """Analysiert eine einzelne Buchung und gibt ein geparstes JSON-Dict zurück.
-
-        Erwartet ein Dict mit den Keys: Mitarbeiter, Erstellungsdatum, Kunde,
-        Auftrag, Tätigkeit, Stunden
+        """
+        Analyse a single row of data for anomalies and return the result as a dictionary.
         """
         try:
             # Sicherheits-Cast: Datums-Objekte (z.B. aus Pandas) vorab in String umwandeln

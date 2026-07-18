@@ -20,6 +20,7 @@ dependencies = [
     { name = "pandas" },
     { name = "pymssql" },
     { name = "python-dotenv" },
+    { name = "requests" },
 ]
 
 [package.metadata]
@@ -29,6 +30,7 @@ requires-dist = [
     { name = "pandas", specifier = ">=3.0.3" },
     { name = "pymssql", specifier = ">=2.3.13" },
     { name = "python-dotenv", specifier = ">=1.2.2" },
+    { name = "requests", specifier = ">=2.34.2" },
 ]
 
 [[package]]

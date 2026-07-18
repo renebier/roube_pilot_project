@@ -13,6 +13,11 @@ class DatabaseConnector(object):
         self.port = os.getenv("SQL_PORT")
         self.connection = self._connect()
 
+    def __enter__(self):
+        return self
+    def __exit__(self, exc_type, exc_value, traceback):
+        if self.connection:
+            self.connection.close()
     def _connect(self):
         """
         Establishes a connection to the database.
@@ -48,7 +53,17 @@ class DatabaseConnector(object):
             print("Failed to connect to the database.")
             return False
         
-    def execute_query(self, query):
+    query = """
+SELECT act.Oid, act.createdOn, act.Subject, act.Duration, proj.Name AS ProjectName, cli.Name AS ClientName, usr.UserName AS UserName, actTy.Name AS ActivityTypeName
+FROM dbo.Activity act 
+LEFT JOIN dbo.Client cli ON act.Client = cli.Oid 
+LEFT JOIN dbo.[User] usr ON act.CreatedBy = usr.Oid 
+LEFT JOIN dbo.ActivityType actTy ON act.ActivityType = actTy.Oid
+LEFT JOIN dbo.Project proj ON act.Project = proj.Oid
+WHERE
+not actTy.Name = 'Urlaub' ORDER BY act.CreatedOn, act.Duration DESC;
+"""
+    def execute_query(self, query = self.query):
         """
         Executes a SQL query and returns the results.
         """
