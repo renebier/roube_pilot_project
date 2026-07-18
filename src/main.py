@@ -27,7 +27,7 @@ if __name__ == "__main__":
     res["Duration"] = res["Duration"].apply(lambda x: x / 3600 if pd.notnull(x) else 0)
     rows = res.to_dict(orient="records")
 
-    llmInterface = LLMInterface()
+    llmInterface = LLMInterface(model_name="qwen2.5:7b")
     for row in rows:
         print(llmInterface.analyze_row(row))
 
