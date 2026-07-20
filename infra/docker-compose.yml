@@ -1,5 +1,6 @@
 services:
   database:
+    platform: linux/amd64
     build:
       context: ./database
       dockerfile: Dockerfile.database
@@ -12,25 +13,25 @@ services:
     ports:
       - "${SQL_PORT:-1433}:1433"
 
-  ollama-hub:
-    build:
-      context: ./ollama
-      dockerfile: Dockerfile.ollama
-    container_name: "${OLLAMA_CONTAINER_NAME:-ollama}"
-    ports:
-      - "${OLLAMA_PORT:-11434}:11434"
-    volumes:
-      - "${OLLAMA_STORAGE_PATH:-./ollama_storage}:/root/.ollama"
-    
-    # --- GPU KONFIGURATION ---
-    # 1. Für NVIDIA GPUs (Setzt nvidia-container-toolkit auf dem Host voraus):
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
+ # ollama-hub:
+ #   build:
+ #     context: ./ollama
+ #     dockerfile: Dockerfile.ollama
+ #   container_name: "${OLLAMA_CONTAINER_NAME:-ollama}"
+ #   ports:
+ #     - "${OLLAMA_PORT:-11434}:11434"
+ #   volumes:
+ #     - "${OLLAMA_STORAGE_PATH:-./ollama_storage}:/root/.ollama"
+ #   
+ #   # --- GPU KONFIGURATION ---
+ #   # 1. Für NVIDIA GPUs (Setzt nvidia-container-toolkit auf dem Host voraus):
+ #   deploy:
+ #     resources:
+ #       reservations:
+ #         devices:
+ #           - driver: nvidia
+ #             count: all
+ #             capabilities: [gpu]
 
     # 2. Für AMD GPUs (ROCm) oder INTEL (Arc/iGPU):
     # Ersetze den 'deploy'-Block oben durch folgende 'devices'-Zeilen:
@@ -45,4 +46,4 @@ services:
 
 volumes:
   dbData:
-  ollama_storage:
+ # ollama_storage:

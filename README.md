@@ -1,6 +1,9 @@
 
 # Lohn-Audit AI Pilot Project
-
+## MAC or slower computer Version
+Please self-host ollama in this version it is disabled in the docker compose to save processing power.
+Everythings else stays the same
+## ENV VARS
 > **Note on Environment Variables:**
 > `.env` files have been committed to this repository for ease of testing. In a production setup, environment variables must be loaded dynamically and kept out of version control.
 
