@@ -42,7 +42,34 @@ services:
     #   - render
 
     restart: unless-stopped
+  audit-runner:
+    build: 
+      context: ./src
+      dockerfile: dockerfile
+    # run container in background and keep it alive for cron jobs
+    command: tail -f /dev/null
+    environment:
+      TEAMS_WEBHOOK_URL: ${TEAMS_WEBHOOK_URL}
+      SQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD}"
+      SQL_SERVER: "${SQL_SERVER:-localhost}"
+      SQL_DATABASE: "${SQL_DATABASE:-VenDocDemo}"
+      SQL_PORT: "${SQL_PORT:-1433}"
+    depends_on:
+      - database
+      - ollama-hub
 
+  cronjob:
+      image: mcuadros/ofelia:latest
+      container_name: ofelia-scheduler
+      depends_on:
+        - audit-runner
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock:ro
+      labels:
+        ofelia.job-exec.audit-job.schedule: "0 0 23 * * *"  # Jeden Tag um 23:00 Uhr
+        ofelia.job-exec.audit-job.container: "audit-runner"
+        ofelia.job-exec.audit-job.command: "python main.py"
+      restart: unless-stopped
 volumes:
   dbData:
   ollama_storage:
