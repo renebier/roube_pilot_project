@@ -22,6 +22,7 @@ class TeamsConnector:
     def send_anomaly_alert(self, row: dict, reason: str) -> bool:
         """Format the anomaly alert as an Adaptive Card and send it to MS Teams. Returns True if successful, False otherwise."""
         if not self.webhook_url:
+            print(row)
             return False
 
         # Adaptive Card payload for MS Teams

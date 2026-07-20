@@ -1,7 +1,7 @@
 services:
   database:
     build:
-      context: .
+      context: ./database
       dockerfile: Dockerfile.database
     environment:
       ACCEPT_EULA: "${ACCEPT_EULA:-Y}"
@@ -14,7 +14,7 @@ services:
 
   ollama-hub:
     build:
-      context: .
+      context: ./ollama
       dockerfile: Dockerfile.ollama
     container_name: "${OLLAMA_CONTAINER_NAME:-ollama}"
     ports:

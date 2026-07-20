@@ -13,7 +13,7 @@ LEFT JOIN dbo.[User] usr ON act.CreatedBy = usr.Oid
 LEFT JOIN dbo.ActivityType actTy ON act.ActivityType = actTy.Oid
 LEFT JOIN dbo.Project proj ON act.Project = proj.Oid
 WHERE
-actTy.Name != 'Urlaub' ORDER BY act.CreatedOn, act.Duration DESC;
+not actTy.Name = 'Urlaub' ORDER BY act.CreatedOn, act.Duration DESC;
 """
 
 
