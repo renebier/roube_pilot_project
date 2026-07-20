@@ -26,19 +26,21 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"Error occurred: {e}")
     rows = res.to_dict(orient="records")
+    analysis_results = []
     try:
         with LLMInterface(model_name="qwen2.5:7b") as llmInterface:
             analysis_results = [llmInterface.analyze_row(row) for row in rows]
     except Exception as e:
         print(f"Error occurred during LLM analysis: {e}")
-    failed_rows = [result for result in analysis_results if result.get("wrong")]
-    try:
-        with TeamsConnector() as teams:
-            for row in failed_rows:
-                reason = row.get("reason", "Keine Begründung verfügbar.")
-                teams.send_anomaly_alert(row, reason)
-    except Exception as e:
-        print(f"Error occurred while sending alerts to Teams: {e}")
+    if analysis_results:
+        failed_rows = [result for result in analysis_results if result.get("wrong")]
+        try:
+            with TeamsConnector() as teams:
+                for row in failed_rows:
+                    reason = row.get("reason", "No justification available.")
+                    teams.send_anomaly_alert(row, reason)
+        except Exception as e:
+            print(f"Error occurred while sending alerts to Teams: {e}")
 
 
     

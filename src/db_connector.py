@@ -63,6 +63,7 @@ class DatabaseConnector(object):
             cursor.execute(query)
             columns = [desc[0] for desc in cursor.description]
             results = cursor.fetchall()
+            print(f"Query executed successfully. Number of rows returned: {len(results)}")
             df = pd.DataFrame(results, columns=columns)
             return df
         else:

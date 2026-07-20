@@ -25,12 +25,11 @@ class LLMInterface(object):
     
     def __init__(self, model_name: str = "hr-analyst"):
         """Initialise LLM-Pipeline with Ollama"""
-        # 1. LLM initialisieren (Ollama muss im Hintergrund laufen)
-        self.llm = ChatOllama(model=model_name, base_url="http://localhost:11434", verbose=True)
-
-        # 2. JSON Output Parser vorbereiten
+        # 1. Initialize the LLM (Ollama must be running in the background)
+        self.llm = ChatOllama(model=model_name, base_url="http://localhost:11434", verbose=True, temperature=0.1, num_ctx=4096, top_p=0.9)
+        # 2. Prepare the JSON output parser
         self.output_parser = JsonOutputParser()
-        # 3. Prompt Template definieren
+        # 3. Define the prompt template
         self.prompt = ChatPromptTemplate.from_messages(
             [
                 ("system", self.SYSTEM_PROMPT),
@@ -49,7 +48,7 @@ class LLMInterface(object):
             ]
         )
 
-        # 4. Die ausführbare Chain zusammenbauen
+        # 4. Build the executable chain
         self.chain = self.prompt | self.llm | self.output_parser
     def __enter__(self):
         return self
@@ -61,16 +60,15 @@ class LLMInterface(object):
         Analyse a single row of data for anomalies and return the result as a dictionary.
         """
         try:
-            # Sicherheits-Cast: Datums-Objekte (z.B. aus Pandas) vorab in String umwandeln
+            # Safety cast: convert date objects (e.g. from Pandas) to strings up front
             if row.get("createdOn"):
                 row["createdOn"] = str(row["createdOn"])
 
-            # KI aufrufen und das fertige JSON-Ergebnis zurückgeben
+            # Invoke the model and return the final JSON result
             result = self.chain.invoke(row)
-            # Metadaten aus der Original-Zeile in das Ergebnis übernehmen, damit man später nachvollziehen kann, welche Zeile genau analysiert wurde
+            # Merge metadata from the original row into the result so the exact source row can be traced later
             result.update(row)
             return result
 
         except Exception as e:
-            # Fehler abfangen, damit ein externer Loop nicht komplett abstürzt
-            return {"reason": f"Fehler bei der KI-Analyse: {str(e)}", "wrong": None}
+            raise Exception("Error initializing the LLM. The Ollama download may not have finished yet or Ollama may not be running in the background.")

@@ -10,8 +10,8 @@ class TeamsConnector:
 
         if not self.webhook_url:
             print(
-                "⚠️ Warnung: Keine TEAMS_WEBHOOK_URL gefunden. "
-                "Nachrichten werden nur in der Konsole ausgegeben."
+                "⚠️ Warning: No TEAMS_WEBHOOK_URL found. "
+                "Messages will only be output to the console."
             )
     def __enter__(self):
         return self
@@ -38,64 +38,64 @@ class TeamsConnector:
                         "body": [
                             {
                                 "type": "TextBlock",
-                                "text": "🚨 Lohn-Audit: Anomalie erkannt",
+                                "text": "🚨 Payroll Audit: Anomaly detected",
                                 "weight": "Bolder",
                                 "size": "Medium",
                                 "color": "Attention",
                             },
                             {
                                 "type": "TextBlock",
-                                "text": f"**Grund:** {reason}",
+                                "text": f"**Reason:** {reason}",
                                 "wrap": True,
                             },
                             {
                                 "type": "FactSet",
                                 "facts": [
                                     {
-                                        "title": "Mitarbeiter (UserName):",
+                                        "title": "Employee (UserName):",
                                         "value": str(
-                                            row.get("UserName") or "Unbekannt"
+                                            row.get("UserName") or "Unknown"
                                         ),
                                     },
                                     {
-                                        "title": "Datum (createdOn):",
+                                        "title": "Date (createdOn):",
                                         "value": str(
-                                            row.get("createdOn") or "Kein Datum"
+                                            row.get("createdOn") or "No date"
                                         ),
                                     },
                                     {
-                                        "title": "Kunde (ClientName):",
+                                        "title": "Client (ClientName):",
                                         "value": str(
                                             row.get("ClientName")
-                                            or "Keine Zuweisung"
+                                            or "No assignment"
                                         ),
                                     },
                                     {
-                                        "title": "Auftrag (ProjectName):",
+                                        "title": "Project (ProjectName):",
                                         "value": str(
                                             row.get("ProjectName")
-                                            or "Keine Zuweisung"
+                                            or "No assignment"
                                         ),
                                     },
                                     {
-                                        "title": "Tätigkeits-Typ:",
+                                        "title": "Activity type:",
                                         "value": str(
                                             row.get("ActivityTypeName")
-                                            or "Kein Typ"
+                                            or "No type"
                                         ),
                                     },
                                     {
-                                        "title": "Beschreibung (Subject):",
+                                        "title": "Description (Subject):",
                                         "value": str(
-                                            row.get("Subject") or "Kein Text"
+                                            row.get("Subject") or "No text"
                                         ),
                                     },
                                     {
-                                        "title": "Dauer (Duration):",
-                                        "value": f"{row.get('Duration') or 0} Std.",
+                                        "title": "Duration (Duration):",
+                                        "value": f"{row.get('Duration') or 0} hrs.",
                                     },
                                     {
-                                        "title": "Buchungs-ID (Oid):",
+                                        "title": "Booking ID (Oid):",
                                         "value": str(row.get("Oid") or "-"),
                                     },
                                 ],
@@ -112,9 +112,9 @@ class TeamsConnector:
                 return True
             else:
                 print(
-                    f"Fehler beim Senden an Teams (Status: {response.status_code}): {response.text}"
+                    f"Error sending to Teams (Status: {response.status_code}): {response.text}"
                 )
                 return False
         except Exception as e:
-            print(f"Verbindungsfehler zu MS Teams: {e}")
+            print(f"Connection error to MS Teams: {e}")
             return False
