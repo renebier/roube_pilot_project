@@ -1,3 +1,4 @@
+import os
 import time
 from typing import Any, Dict, List, Optional
 import pandas as pd
@@ -36,11 +37,6 @@ class LLMBenchmarker:
                     "user",
                     (
                         "Prüfe diese Buchung:\n"
-                        "- ID: {Oid}\n"
-                        "- Mitarbeiter: {UserName}\n"
-                        "- Datum: {createdOn}\n"
-                        "- Kunde: {ClientName}\n"
-                        "- Auftrag: {ProjectName}\n"
                         "- Typ: {ActivityTypeName}\n"
                         "- Beschreibung: {Subject}\n"
                         "- Stunden: {Duration}\n"
@@ -158,106 +154,13 @@ class LLMBenchmarker:
 
 if __name__ == "__main__":
 
-    example_data = pd.DataFrame(
-        [
-            {
-        "Oid":"881c85c7-bf7a-e911-b4a2-4c526221648e",
-        "createdOn":1558337195317,
-        "Subject":"R\u00fcckruf",
-        "Duration":24.0,
-        "ProjectName":None,
-        "ClientName":"HUSS gmbh",
-        "UserName":"VenDoc",
-        "ActivityTypeName":"Telefon",
-        "anomaly": True
-    },
-    {
-        "Oid":"61e027e6-bf7a-e911-b4a2-4c526221648e",
-        "createdOn":1558337244013,
-        "Subject":"Anruf neue Version",
-        "Duration":1.0,
-        "ProjectName":None,
-        "ClientName":"HUSS gmbh",
-        "UserName":"VenDoc",
-        "ActivityTypeName":"Telefon",
-                "anomaly": False
-    },
-    {
-        "Oid":"f514cfb9-c07a-e911-b4a2-4c526221648e",
-        "createdOn":1558337595403,
-        "Subject":"Anruf",
-        "Duration":1.0,
-        "ProjectName":None,
-        "ClientName":"HUSS gmbh",
-        "UserName":"VenDoc",
-        "ActivityTypeName":"Telefon",
-                "anomaly": False
-    },
-    {
-        "Oid":"ab480688-c17a-e911-b4a2-4c526221648e",
-        "createdOn":1558337948763,
-        "Subject":"R\u00fcckruf",
-        "Duration":24.0,
-        "ProjectName":None,
-        "ClientName":"HUSS gmbh",
-        "UserName":"VenDoc",
-        "ActivityTypeName":"Telefon",
-                    "anomaly": True
-
-    },
-    {
-        "Oid":"26f68241-c27a-e911-b4a2-4c526221648e",
-        "createdOn":1558338282203,
-        "Subject":"Abgabe Angebot",
-        "Duration":1.0,
-        "ProjectName":None,
-        "ClientName":"HUSS gmbh",
-        "UserName":"VenDoc",
-        "ActivityTypeName":"Aufgabe",
-                "anomaly": False
-    },
-    {
-        "Oid":"f1f44aaa-c27a-e911-b4a2-4c526221648e",
-        "createdOn":1558338436593,
-        "Subject":"R\u00fcckruf",
-        "Duration":24.0,
-        "ProjectName":None,
-        "ClientName":"HUSS gmbh",
-        "UserName":"VenDoc",
-        "ActivityTypeName":"Telefon",
-                "anomaly": True
-
-    },
-    {
-        "Oid":"0a5d184e-c37a-e911-b4a2-4c526221648e",
-        "createdOn":1558338704817,
-        "Subject":"R\u00fcckruf",
-        "Duration":24.0,
-        "ProjectName":None,
-        "ClientName":"HUSS gmbh",
-        "UserName":"VenDoc",
-        "ActivityTypeName":"Telefon",
-                "anomaly": True
-
-    },
-    {
-        "Oid":"2de1008e-c37a-e911-b4a2-4c526221648e",
-        "createdOn":1558338811127,
-        "Subject":"Abgabetermin Angebot",
-        "Duration":1.0,
-        "ProjectName":None,
-        "ClientName":"HUSS gmbh",
-        "UserName":"VenDoc",
-        "ActivityTypeName":"Aufgabe",
-                "anomaly": False
-    },
-        ]
-    )
+    
+    df = pd.read_json(os.path.join(os.path.dirname(__file__), "activity_data.json"), orient="records")
 
     benchmarker = LLMBenchmarker(
         models=[("qwen2.5:7b", "7Mrd."), ("llama3.1:8b", "8Mrd."), ("qwen2.5:3b", "3Mrd.")]
     )
-    results_df = benchmarker.run(df=example_data)
+    results_df = benchmarker.run(df=df)
 
     print("\nBenchmark Summary:")
     print(results_df.to_string(index=False))

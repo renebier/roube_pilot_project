@@ -1,0 +1,164 @@
+[
+  {
+    "ActivityTypeName": "Telefon",
+    "anomaly": true,
+    "Subject": "Rückruf",
+    "Duration": 24.0
+  },
+  {
+    "ActivityTypeName": "Telefon",
+    "anomaly": true,
+    "Subject": "Rückruf",
+    "Duration": 24.0
+  },
+  {
+    "ActivityTypeName": "Telefon",
+    "anomaly": false,
+    "Subject": "Anruf neue Version",
+    "Duration": 1.0
+  },
+  {
+    "ActivityTypeName": "Telefon",
+    "anomaly": false,
+    "Subject": "Anruf",
+    "Duration": 1.0
+  },
+  {
+    "ActivityTypeName": "Telefon",
+    "anomaly": true,
+    "Subject": "Rückruf",
+    "Duration": 24.0
+  },
+  {
+    "ActivityTypeName": "Aufgabe",
+    "anomaly": false,
+    "Subject": "Abgabe Angebot",
+    "Duration": 1.0
+  },
+  {
+    "ActivityTypeName": "Telefon",
+    "anomaly": true,
+    "Subject": "Rückruf",
+    "Duration": 24.0
+  },
+  {
+    "ActivityTypeName": "Telefon",
+    "anomaly": true,
+    "Subject": "Rückruf",
+    "Duration": 24.0
+  },
+  {
+    "ActivityTypeName": "Aufgabe",
+    "anomaly": false,
+    "Subject": "Abgabetermin Angebot",
+    "Duration": 1.0
+  },
+  {
+    "ActivityTypeName": "Brief",
+    "anomaly": false,
+    "Subject": null,
+    "Duration": 1.0
+  },
+  {
+    "ActivityTypeName": "Termin",
+    "anomaly": true,
+    "Subject": "testtestets",
+    "Duration": 24.0
+  },
+  {
+    "ActivityTypeName": "Ressourcenplanung",
+    "anomaly": false,
+    "Subject": "BV Schlossallee",
+    "Duration": 3.0
+  },
+  {
+    "ActivityTypeName": "Ressourcenplanung",
+    "anomaly": false,
+    "Subject": "Änderung Wasserleitung",
+    "Duration": 0.5
+  },
+  {
+    "ActivityTypeName": "Ressourcenplanung",
+    "anomaly": false,
+    "Subject": "Änderung Wasserleitung",
+    "Duration": 2.0
+  },
+  {
+    "ActivityTypeName": "Ressourcenplanung",
+    "anomaly": false,
+    "Subject": null,
+    "Duration": 0.5
+  },
+  {
+    "ActivityTypeName": "Ressourcenplanung",
+    "anomaly": false,
+    "Subject": null,
+    "Duration": 0.5
+  },
+  {
+    "ActivityTypeName": "Ressourcenplanung",
+    "anomaly": true,
+    "Subject": "",
+    "Duration": 25.0
+  },
+  {
+    "ActivityTypeName": "Ressourcenplanung",
+    "anomaly": false,
+    "Subject": "",
+    "Duration": 1.0
+  },
+  {
+    "ActivityTypeName": "Ressourcenplanung",
+    "anomaly": true,
+    "Subject": "Testversuch",
+    "Duration": 2.5
+  },
+  {
+    "ActivityTypeName": "Ressourcenplanung",
+    "anomaly": true,
+    "Subject": "Testversucht2",
+    "Duration": 1.0
+  },
+  {
+    "ActivityTypeName": "Ressourcenplanung",
+    "anomaly": false,
+    "Subject": "Installation Waschbecken",
+    "Duration": 1.0
+  },
+  {
+    "ActivityTypeName": "Ressourcenplanung",
+    "anomaly": true,
+    "Subject": "Bewegungsmelder + Installation",
+    "Duration": 0.0
+  },
+  {
+    "ActivityTypeName": "Ressourcenplanung",
+    "anomaly": true,
+    "Subject": "Bewegungsmelder + Installation",
+    "Duration": 0.0
+  },
+  {
+    "ActivityTypeName": "Ressourcenplanung",
+    "anomaly": false,
+    "Subject": null,
+    "Duration": 0.5
+  },
+  {
+    "ActivityTypeName": "Ressourcenplanung",
+    "anomaly": true,
+    "Subject": "Bewegungsmelder + Installation",
+    "Duration": 0.0
+  },
+  {
+    "ActivityTypeName": "Ressourcenplanung",
+    "anomaly": true,
+    "Subject": "Bewegungsmelder + Installation",
+    "Duration": 0.0
+  },
+  {
+    "ActivityTypeName": "Ressourcenplanung",
+    "anomaly": false,
+    "Subject": null,
+    "Duration": 0.5
+  }
+]

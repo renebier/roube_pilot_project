@@ -13,7 +13,7 @@ LEFT JOIN dbo.[User] usr ON act.CreatedBy = usr.Oid
 LEFT JOIN dbo.ActivityType actTy ON act.ActivityType = actTy.Oid
 LEFT JOIN dbo.Project proj ON act.Project = proj.Oid
 WHERE
-not actTy.Name = 'Urlaub' ORDER BY act.CreatedOn, act.Duration DESC;
+actTy.Name != 'Urlaub' ORDER BY act.CreatedOn, act.Duration DESC;
 """
 
 
@@ -27,7 +27,7 @@ if __name__ == "__main__":
         print(f"Error occurred: {e}")
     rows = res.to_dict(orient="records")
     try:
-        with LLMInterface(model_name="qwen2.5:3b") as llmInterface:
+        with LLMInterface(model_name="qwen2.5:7b") as llmInterface:
             analysis_results = [llmInterface.analyze_row(row) for row in rows]
     except Exception as e:
         print(f"Error occurred during LLM analysis: {e}")
