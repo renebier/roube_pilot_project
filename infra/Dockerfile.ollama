@@ -1,4 +1,6 @@
 FROM ollama/ollama:latest
+# For INTEL/AMD GPUs use ollama/ollama:rocm
+
 
 COPY Modelfile.analyst /Modelfile
 COPY run_models.sh /run_models.sh

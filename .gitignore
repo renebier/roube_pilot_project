@@ -3,4 +3,4 @@
 ollama_storage/
 *.bak
 __pycache__/
-.env
+

@@ -4,23 +4,26 @@ services:
       context: .
       dockerfile: Dockerfile.database
     environment:
-      ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "securePassword1!" 
-      MSSQL_PID: "Developer"
+      ACCEPT_EULA: "${ACCEPT_EULA:-Y}"
+      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD}"
+      MSSQL_PID: "${MSSQL_PID:-Developer}"
     volumes:
       - dbData:/var/opt/mssql/data
     ports:
-      - "1433:1433"
+      - "${SQL_PORT:-1433}:1433"
 
   ollama-hub:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile.ollama
-    container_name: ollama
+    container_name: "${OLLAMA_CONTAINER_NAME:-ollama}"
     ports:
-      - "11434:11434"
+      - "${OLLAMA_PORT:-11434}:11434"
     volumes:
-      - ./ollama_storage:/root/.ollama
+      - "${OLLAMA_STORAGE_PATH:-./ollama_storage}:/root/.ollama"
+    
+    # --- GPU KONFIGURATION ---
+    # 1. Für NVIDIA GPUs (Setzt nvidia-container-toolkit auf dem Host voraus):
     deploy:
       resources:
         reservations:
@@ -28,9 +31,18 @@ services:
             - driver: nvidia
               count: all
               capabilities: [gpu]
+
+    # 2. Für AMD GPUs (ROCm) oder INTEL (Arc/iGPU):
+    # Ersetze den 'deploy'-Block oben durch folgende 'devices'-Zeilen:
+    # devices:
+    #   - /dev/kfd:/dev/kfd     # Speziell für AMD ROCm
+    #   - /dev/dri:/dev/dri     # Für AMD und Intel Grafikprozessoren
+    # group_add:
+    #   - video
+    #   - render
+
     restart: unless-stopped
 
 volumes:
   dbData:
   ollama_storage:
- 
