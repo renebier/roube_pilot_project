@@ -6,7 +6,7 @@ from llm_interface import LLMInterface
 from teams_handler import TeamsConnector
 
 QUERY = """
-SELECT act.Oid, act.createdOn, act.Subject, act.Duration, proj.Name AS ProjectName, cli.Name AS ClientName, usr.UserName AS UserName, actTy.Name AS ActivityTypeName
+SELECT act.Oid, act.createdOn, act.Subject, (act.Duration / 3600) AS Duration, proj.Name AS ProjectName, cli.Name AS ClientName, usr.UserName AS UserName, actTy.Name AS ActivityTypeName
 FROM dbo.Activity act 
 LEFT JOIN dbo.Client cli ON act.Client = cli.Oid 
 LEFT JOIN dbo.[User] usr ON act.CreatedBy = usr.Oid 
@@ -25,10 +25,9 @@ if __name__ == "__main__":
             res = db.execute_query(query=QUERY)
     except Exception as e:
         print(f"Error occurred: {e}")
-    res["Duration"] = res["Duration"].apply(lambda x: x / 3600 if pd.notnull(x) else 0)
     rows = res.to_dict(orient="records")
     try:
-        with LLMInterface(model_name="qwen2.5:7b") as llmInterface:
+        with LLMInterface(model_name="qwen2.5:3b") as llmInterface:
             analysis_results = [llmInterface.analyze_row(row) for row in rows]
     except Exception as e:
         print(f"Error occurred during LLM analysis: {e}")

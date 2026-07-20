@@ -1,5 +1,5 @@
 # Basis-Modell
-FROM qwen2.5:7b
+FROM qwen2.5:3b
 
 # Parameter für maximale Konstanz und deterministische JSON-Ausgabe
 PARAMETER temperature 0.1

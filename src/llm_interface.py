@@ -67,6 +67,7 @@ class LLMInterface(object):
 
             # KI aufrufen und das fertige JSON-Ergebnis zurückgeben
             result = self.chain.invoke(row)
+            # Metadaten aus der Original-Zeile in das Ergebnis übernehmen, damit man später nachvollziehen kann, welche Zeile genau analysiert wurde
             result.update(row)
             return result
 

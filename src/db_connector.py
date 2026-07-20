@@ -61,7 +61,6 @@ class DatabaseConnector(object):
         if self.connection:
             cursor = self.connection.cursor()
             cursor.execute(query)
-            print(f"Executed query: {query}")
             columns = [desc[0] for desc in cursor.description]
             results = cursor.fetchall()
             df = pd.DataFrame(results, columns=columns)
