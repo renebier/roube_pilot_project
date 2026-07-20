@@ -6,7 +6,7 @@ class DatabaseConnector(object):
     A class to handle database connections and queries.
     """
     def __init__(self):
-        self.server = os.getenv("SQL_SERVER")
+        self.server = os.getenv("SQL_SERVER", "database")
         self.database = os.getenv("SQL_DATABASE")
         self.username = os.getenv("SQL_SA_USERNAME", "sa")  # Default to 'sa' if not set
         self.password = os.getenv("SQL_SA_PASSWORD")

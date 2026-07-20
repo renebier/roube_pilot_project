@@ -1,7 +1,7 @@
 services:
   database:
     build:
-      context: .
+      context: ./infra/database
       dockerfile: Dockerfile.database
     environment:
       ACCEPT_EULA: "${ACCEPT_EULA:-Y}"
@@ -14,7 +14,7 @@ services:
 
   ollama-hub:
     build:
-      context: .
+      context: ./infra/ollama
       dockerfile: Dockerfile.ollama
     container_name: "${OLLAMA_CONTAINER_NAME:-ollama}"
     ports:
@@ -45,13 +45,13 @@ services:
   audit-runner:
     build: 
       context: ./src
-      dockerfile: dockerfile
+      dockerfile: Dockerfile
     # run container in background and keep it alive for cron jobs
     command: tail -f /dev/null
     environment:
       TEAMS_WEBHOOK_URL: ${TEAMS_WEBHOOK_URL}
       SQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD}"
-      SQL_SERVER: "${SQL_SERVER:-localhost}"
+      SQL_SERVER: "${SQL_SERVER:-database}"
       SQL_DATABASE: "${SQL_DATABASE:-VenDocDemo}"
       SQL_PORT: "${SQL_PORT:-1433}"
     depends_on:
@@ -61,6 +61,7 @@ services:
   cronjob:
       image: mcuadros/ofelia:latest
       container_name: ofelia-scheduler
+      command: daemon --docker
       depends_on:
         - audit-runner
       volumes:

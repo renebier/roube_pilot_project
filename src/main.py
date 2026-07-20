@@ -1,4 +1,3 @@
-from dotenv import load_dotenv
 from db_connector import DatabaseConnector
 import pandas as pd
 
@@ -19,7 +18,6 @@ actTy.Name != 'Urlaub' ORDER BY act.CreatedOn, act.Duration DESC;
 
 
 if __name__ == "__main__":
-    load_dotenv()
     try:
         with DatabaseConnector() as db:
             res = db.execute_query(query=QUERY)
